@@ -57,6 +57,7 @@ impl Particle {
         self.velocity = temp;
 
         self.has_collided = true;
+        other.has_collided = true;
         true
     }
 
@@ -67,8 +68,8 @@ impl Particle {
             return false;
         }
 
+        self.velocity -= 2.0 * self.velocity.dot(self.position) / self.position.magnitude2() * self.position;
         self.position = self.position.normalize_to(1.0 - self.radius);
-        self.velocity -= 2.0 * self.velocity.dot(self.position) * self.position;
 
         self.has_collided = true;
         true
