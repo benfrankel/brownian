@@ -144,12 +144,18 @@ fn main() {
             .default_value("0.04"))
         .get_matches();
 
-    let gas_count = matches.value_of("gas-count").unwrap().parse::<usize>().unwrap();
-    let gas_mass = matches.value_of("gas-mass").unwrap().parse::<f64>().unwrap();
-    let gas_radius = matches.value_of("gas-size").unwrap().parse::<f64>().unwrap();
-    let gas_speed = matches.value_of("gas-temperature").unwrap().parse::<f64>().unwrap();
-    let dust_mass = matches.value_of("dust-mass").unwrap().parse::<f64>().unwrap();
-    let dust_radius = matches.value_of("dust-size").unwrap().parse::<f64>().unwrap();
+    let gas_count = 1 + matches.value_of("gas-count").unwrap()
+        .parse::<usize>().unwrap();
+    let gas_mass = matches.value_of("gas-mass").unwrap()
+        .parse::<f64>().unwrap();
+    let gas_radius = matches.value_of("gas-size").unwrap()
+        .parse::<f64>().unwrap();
+    let gas_speed = matches.value_of("gas-temperature").unwrap()
+        .parse::<f64>().unwrap();
+    let dust_mass = matches.value_of("dust-mass").unwrap()
+        .parse::<f64>().unwrap();
+    let dust_radius = matches.value_of("dust-size").unwrap()
+        .parse::<f64>().unwrap();
 
     let opengl = OpenGL::V4_5;
     let mut window: Window = WindowSettings::new(
