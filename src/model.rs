@@ -127,7 +127,7 @@ impl ParticlePoolGenerator {
 
 pub struct ParticlePool {
     pub particles: Vec<Particle>,
-    speed: f64,
+    pub speed: f64,
 }
 
 

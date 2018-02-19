@@ -38,8 +38,8 @@ impl App {
 
         const BG_COLOR: [f32; 4] = [0.04, 0.04, 0.08, 1.0];
         const DISK_COLOR: [f32; 4] = [0.12, 0.12, 0.16, 1.0];
-        const PARTICLE_COLOR: [f32; 4] = [0.24, 0.24, 0.31, 1.0];
-        const MAIN_PARTICLE_COLOR: [f32; 4] = [0.39, 0.78, 0.39, 1.0];
+        const GAS_COLOR: [f32; 4] = [0.24, 0.24, 0.31, 1.0];
+        const DUST_COLOR: [f32; 4] = [0.39, 0.78, 0.39, 1.0];
 
         let disk_w = (args.width as f64) * 0.9;
         let disk_h = (args.height as f64) * 0.9;
@@ -61,14 +61,14 @@ impl App {
                 let y = gas.position.y * disk_h / 2.0;
                 let w = gas.radius * disk_w;
                 let h = gas.radius * disk_h;
-                ellipse(PARTICLE_COLOR, [x - w / 2.0, y - h / 2.0, w, h], transform, gl);
+                ellipse(GAS_COLOR, [x - w / 2.0, y - h / 2.0, w, h], transform, gl);
             }
             let dust = &pool.particles[0];
             let x = dust.position.x * disk_w / 2.0;
             let y = dust.position.y * disk_h / 2.0;
             let w = dust.radius * disk_w;
             let h = dust.radius * disk_h;
-            ellipse(MAIN_PARTICLE_COLOR, [x - w / 2.0, y - h / 2.0, w, h], transform, gl);
+            ellipse(DUST_COLOR, [x - w / 2.0, y - h / 2.0, w, h], transform, gl);
         });
     }
 
@@ -79,15 +79,29 @@ impl App {
     fn press(&mut self, button: &Button) {
         if let &Button::Keyboard(key) = button {
             match key {
-                Key::Return => println!("Return?"),
+                Key::Return => self.reset(),
+                Key::Plus | Key::NumPadPlus | Key::Equals => self.pool.speed *= 1.1,
+                Key::Minus | Key::NumPadMinus => self.pool.speed /= 1.1,
                 _ => (),
             }
         }
     }
+
+    fn reset(&mut self) {
+        let dust_mass = self.pool.particles[0].mass;
+        let dust_radius = self.pool.particles[0].radius;
+
+        self.pool = self.pool_rand.generate(self.pool.particles.len());
+
+        self.pool.particles[0].mass = dust_mass;
+        self.pool.particles[0].radius = dust_radius;
+        self.pool.particles[0].position.x = 0.0;
+        self.pool.particles[0].position.y = 0.0;
+    }
 }
 
 fn main() {
-    let matches = ClApp::new("Title Here")
+    let matches = ClApp::new("brownian_demo")
         .version("0.1.0")
         .author("Ben Frankel <ben.frankel7@gmail.com>")
         .about("Brownian motion simulator")
